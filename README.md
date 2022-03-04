@@ -1,2 +1,3 @@
-# Graduation-Project
-南昌理工学院2022年毕业设计项目
+**Debug模式启动命令：**`SET DEBUG=school:* & npm start`
+
+**生产环境启动命令**`node app.js`
