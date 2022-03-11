@@ -20,7 +20,7 @@ return new Promise((resolve,reject)=>{
         reject('sql语句错误')
         return
       }
-      resolve(result)
+      resolve(result)//如何选择数据第一个键填行索引第二个填列索引
   })
 })
 }
