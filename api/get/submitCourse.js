@@ -2,51 +2,40 @@ var express = require("express");
 var api = express.Router();
 var sql = require("../../db");
 api.get("/", (req, res, next) => {
+  //验证登录状态
   if (req.session.username === undefined) {
     res.json({ err: 1, msg: "请先登录" });
-    next();
-    return
+    next()
   }
+  //初始化所需数据
   let username = req.session.username;
   let course = req.query.course;
-  let SELECTlimited=3
+  let SELECTlimited=3//限制选多少门课
   async function insert() {
-    //验证是否存在提交的课程
+    //验证数据库里是否存在前端提交的课程
     let result = await sql
       .query("SELECT count(*) FROM  selectcourse WHERE course = ?", [course])
     await new Promise((resovle,reject) => {
       if (result[0]["count(*)"] == 0) {
-        reject()
+        reject(new Error("没有选课数据，恶意篡改前端数据"))
       }
       resovle()
-    }).catch(()=>{
-      res.json({ err: 1, msg: "没有选课数据，恶意篡改前端数据" })
-      next()
-      return
     })
-    //这里验证限制选课数量
     let selectedNumResult=await sql.query('SELECT selectedCourse FROM userinfo WHERE username=?',[username])
     let courseArr=String(selectedNumResult[0].selectedCourse).trim().split(' ')
-    //验证是否为提交过的课程
+    //验证是否重复提交课程
     await new Promise((resovle,reject)=>{
-      if(courseArr.indexOf(course)==-1){
-        resovle()
+      if(courseArr.indexOf(course)!=-1){
+        reject(new Error('已经选了该课程，不能选一样的课程'))
       }
-      reject()
-    }).catch(()=>{
-      res.json({err:1,msg:'已经选了该课程，不能选一样的课程'})
-      next()
-      return
+      resovle()
     })
+    //这里验证限制选课数量
     await new Promise((resolve,reject)=>{
         if(courseArr.length>=SELECTlimited){
-          reject()
+          reject(new Error('您已经选了'+SELECTlimited+'门课了，不能再选了！'))
         }
         resolve()
-    }).catch(()=>{
-      res.json({err:1,msg:'您已经选了'+SELECTlimited+'门课了，不能再选了！'})
-      next()
-      return
     })
     //提交选课信息到数据库
     await sql
@@ -54,16 +43,15 @@ api.get("/", (req, res, next) => {
         "UPDATE userinfo SET selectedCourse=concat(selectedCourse,' ',?) WHERE username=?",
         [course, username]
       )
-    await sql.query('UPDATE selectcourse SET SelectNumer=SelectNumer+1 WHERE course= ?',[course]).
-    then(()=>{
-      res.json({err:0,msg:'成功'})
-    }).catch(e=>{
-      res.json({err:1,msg:'该课程已经被选满了不能再选了！'+e})
-    }).finally(()=>{
-      next()
-    })
+    await sql.query('UPDATE selectcourse SET SelectNumer=SelectNumer+1 WHERE course= ?',[course])
   }
-  insert();
+  insert().then(()=>{
+    res.json({err:0,msg:'选课成功'})
+  }).catch(err=>{
+    res.json({err:1,msg:err.message})
+  }).finally(()=>{
+    next()
+  })
 });
 
 module.exports = api;

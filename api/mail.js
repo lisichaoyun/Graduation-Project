@@ -35,7 +35,7 @@ function sendMail(mail, code) {
   return new Promise((resolve, reject) => {
     // 使用先前创建的传输器的 sendMail 方法传递消息对象
     transporter.sendMail(mailOptions, (error, info) => {
-      if (error) reject();
+      if (error) reject(new Error('发送邮件模块出现错误'));
       else {
         // console.log(`Message: ${info.messageId}`);
         // console.log(`sent: ${info.response}`);

@@ -11,8 +11,8 @@ api.get("/", (req, res, next) => {
     .then((result) => {
       res.json({ err: 0, msg: result });
     })
-    .catch((error) => {
-      res.json({ err: 1, meg: error });
+    .catch((err) => {
+      res.json({ err: 1, meg: err.message });
     })
     .finally(() => {
       next();

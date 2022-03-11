@@ -12,8 +12,8 @@ api.post("/", (req, res, next) => {
         }else{
             res.json({err:1,msg:'密码错误'})
         }
-    }).catch(e=>{
-        res.json({err:1,msg:e})
+    }).catch(err=>{
+        res.json({err:1,msg:err.messagee})
     }).finally(()=>{
         next()
     })

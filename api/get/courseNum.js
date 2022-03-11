@@ -7,8 +7,8 @@ api.get("/", (req, res, next) => {
     .then(result => {
         res.json({err:0,msg:result[0]["count(*)"]})
     })
-    .catch(error => {
-        res.json({err:1,msg:error})
+    .catch(err => {
+        res.json({err:1,msg:err.message})
     })
     .finally(() => {
       next();

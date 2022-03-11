@@ -14,8 +14,8 @@ api.get("/", function (req, res, next) {
         msg: "邮件发送成功请查看",
       });
     })
-    .catch(error => {
-      res.json({ err: 1, msg: error });
+    .catch(err => {
+      res.json({ err: 1, msg: err.message });
     })
     .finally(() => {
       next();
