@@ -4,7 +4,7 @@ module.exports={//由于redis是单线程的，而且读取速度比js解释器�
     Client:client,
     hmset:(key,value)=>{
         return new Promise((resovle,reject)=>{//注意不能嵌套对象
-            client.hmset(key,value,err=>{//value必须为对象
+            client.hmset(key,value,err=>{
                 if(err){
                     reject(new Error('缓存失败'))
                     return
