@@ -1,6 +1,6 @@
 var redis = require("redis");//请安装老版本的redis@3.1.2
 var client = redis.createClient(); //这里可以填写redis密码
-module.exports={//由于redis是单线程的，而且读取速度比js解释器还快,所以这里异步编程没有用
+module.exports={//由于redis是单线程的
     Client:client,
     hmset:(key,value)=>{
         return new Promise((resovle,reject)=>{//注意不能嵌套对象
