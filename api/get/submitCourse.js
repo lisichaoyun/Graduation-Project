@@ -1,6 +1,7 @@
 var express = require("express");
 var api = express.Router();
 var sql = require("../../db");
+let RedisCacheDel=require('../../RedisCache').Del
 api.get("/", (req, res, next) => {
   //验证登录状态
   if (req.session.username === undefined) {
@@ -8,6 +9,8 @@ api.get("/", (req, res, next) => {
     next()
   }
   //初始化所需数据
+  let number=req.query.contentsNum
+  let offet=req.query.offeted
   let username = req.session.username;
   let course = req.query.course;
   let SELECTlimited=3//限制选多少门课
@@ -44,6 +47,7 @@ api.get("/", (req, res, next) => {
         [course, username]
       )
     await sql.query('UPDATE selectcourse SET SelectNumer=SelectNumer+1 WHERE course= ?',[course])
+    RedisCacheDel("selectcourse_" + number + "_"+ offet)//删除缓存以更新缓存
   }
   insert().then(()=>{
     res.json({err:0,msg:'选课成功'})

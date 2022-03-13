@@ -13,7 +13,7 @@ api.post("/", (req, res, next) => {
             res.json({err:1,msg:'密码错误'})
         }
     }).catch(err=>{
-        res.json({err:1,msg:err.messagee})
+        res.json({err:1,msg:err.message})
     }).finally(()=>{
         next()
     })
