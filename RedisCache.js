@@ -9,7 +9,7 @@ module.exports={//由于redis是单线程的
                     reject(new Error('缓存失败'))
                     return
                 }
-                resovle()
+                resovle(value)
             })
         })
     },

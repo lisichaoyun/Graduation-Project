@@ -40,7 +40,6 @@ app.use(cookieParser()); //这里可以设置cookie加密字符串
 //接口变量声明
 var SendEmailCode=require("./api/get/SendEmailCode")//特殊功能接口
 var Selectcourse=require("./api/get/Selectcourse")//查询接口
-var courseNum=require("./api/get/courseNum")//查询接口
 var studentInfo=require("./api/get/studentInfo")//查询接口
 var login=require("./api/post/login")//查询接口
 var submitCourse=require('./api/get/submitCourse')//更新数据接口
@@ -49,7 +48,6 @@ var register=require("./api/post/register")//更新数据接口
 //引用接口
 app.use("/api/SendEmailCode", SendEmailCode);//注册时发送验证码
 app.use("/api/Selectcourse", Selectcourse);//返回可选课程
-app.use("/api/courseNum", courseNum);//返回课程数目
 app.use("/api/studentInfo", studentInfo);//返回学生信息
 app.use("/api/login", login);//登录接口
 app.use("/api/submitCourse", submitCourse);//提交选择课程接口
